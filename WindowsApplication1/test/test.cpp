@@ -1,5 +1,4 @@
 #include <windows.h>
-#include <filesystem>
 #include <iostream>
 
 int main()
@@ -12,7 +11,7 @@ int main()
 		return 0;
 	}
 
-//	std::cout << fopen;
+	//std::cout << fopen;
 	BYTE* buf = new BYTE[5000000];
 	size_t size = fread(buf, 1, 5000000, test);
 	fclose(test);
