@@ -22,6 +22,7 @@ int main()
 	std::cout << (char)(head.bfType & 0xFF) << (char)(head.bfType >> 8) << "\n";
 	std::cout << "Taille :" << head.bfSize << "bytes\n";
 	std::cout << "offset des pixels :" << head.bfOffBits << "bytes\n";
+	delete[] buf;
 
 
 	return 0;
