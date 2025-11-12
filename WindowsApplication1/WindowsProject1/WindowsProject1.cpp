@@ -44,12 +44,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // Boucle de messages principale :
     while (GetMessage(&msg, nullptr, 0, 0))
-    {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
+    {   
+        DispatchMessage(&msg);
     }
 
     return (int) msg.wParam;
@@ -77,7 +73,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
     wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_WINDOWSPROJECT1);
-    wcex.lpszClassName  = L"Test";                                   //nom de clsse<
+    wcex.lpszClassName  = L"yes";                                   //nom de clsse<
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
     return RegisterClassExW(&wcex);
@@ -97,7 +93,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Stocke le handle d'instance dans la variable globale
 
-   HWND hWnd = CreateWindowW(L"Test", L"Test", WS_OVERLAPPEDWINDOW,         //szTitle = titre de fenetre
+   HWND hWnd = CreateWindowW(L"yes", L"Test", WS_OVERLAPPEDWINDOW,         //szTitle = titre de fenetre
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
