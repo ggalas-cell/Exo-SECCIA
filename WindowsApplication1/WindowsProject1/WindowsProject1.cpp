@@ -3,7 +3,7 @@
 
 #include "framework.h"
 #include "WindowsProject1.h"
-
+#include <map>
 #define MAX_LOADSTRING 100
 
 // Variables globales :
@@ -16,7 +16,7 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-
+std::map<int, HWND>ctrls;
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
@@ -99,8 +99,31 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    
    
    HWND button = CreateWindowW(L"Button", L"Enter", WS_VISIBLE|WS_CHILD,       
-       0, 0, 100, 80, hWnd, nullptr, hInstance, nullptr);
-  
+       300, 300, 100, 80, hWnd, nullptr, hInstance, nullptr);
+   HWND text = CreateWindowW(L"Edit", L"SELECTIONNER UNE ENTRER", WS_VISIBLE | WS_CHILD|BS_DEFPUSHBUTTON,
+       100, 0, 100, 80, hWnd, (HMENU)100, hInstance, nullptr);
+   ctrls.insert(std::make_pair(100, button));
+   //HWND hwndButton = CreateWindow(
+   //    L"BUTTON",  // Predefined class; Unicode assumed 
+   //    L"OK",      // Button text 
+   //    WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
+   //    10,         // x position 
+   //    10,         // y position 
+   //    100,        // Button width
+   //    100,        // Button height
+   //    m_hwnd,     // Parent window
+   //    NULL,       // No menu.
+   //    (HINSTANCE)GetWindowLongPtr(m_hwnd, GWLP_HINSTANCE),
+   //    NULL);      // Pointer not needed.
+
+   //BM_GETSTATE(0, 0);
+   
+   /*if (button_handle != NULL)
+   {
+       button_state = SendMessage(button_handle,
+           BM_GETSTATE,
+           0, 0);*/
+   if (!button)return FALSE;
 
    if (!hWnd)
    {
@@ -174,9 +197,13 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_COMMAND:
         if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
         {
+
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
         }
+        break;
+    case 100 :
+        
         break;
     }
     return (INT_PTR)FALSE;

@@ -1,16 +1,13 @@
 #include <windows.h>
 #include <iostream>
 
-int main()
+int main()			// PARAMETRE D
 {
 	FILE* test;
+	errno_t error;
+	error = fopen_s(&test, "C:\\Users\\ggalas\\Documents\\GitHub\\Exo-SECCIA\\wolf 1.bmp", "rb");
+	if (error != 0)return 0;
 	
-	fopen_s(&test, "C:\\Users\\ggalas\\Documents\\GitHub\\Exo-SECCIA\\wolf 1.bmp", "rb");
-	if (test == nullptr)
-	{
-		return 0;
-	}
-
 	//std::cout << fopen;
 	BYTE* buf = new BYTE[5000000];	// (source)	//lecture du file -> buffer 
 	size_t size = fread(buf, 1, 5000000, test);		//idem
@@ -33,6 +30,7 @@ int main()
 	std::cout << "Img size:" << bih.biSizeImage << " bytes\n";
 	if (head.bfType != 0x4D42)
 		std::cout << "error not a valid bmp file\n";
+
 	delete[] buf;
 
 
