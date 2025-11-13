@@ -1,9 +1,10 @@
 // WindowsProject1.cpp : Définit le point d'entrée de l'application.
 //
-
+#include <map>
+#include <iostream>
 #include "framework.h"
 #include "WindowsProject1.h"
-#include <map>
+
 #define MAX_LOADSTRING 100
 
 // Variables globales :
@@ -98,11 +99,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
    
    
-   HWND button = CreateWindowW(L"Button", L"Enter", WS_VISIBLE|WS_CHILD,       
-       300, 300, 100, 80, hWnd, nullptr, hInstance, nullptr);
-   HWND text = CreateWindowW(L"Edit", L"SELECTIONNER UNE ENTRER", WS_VISIBLE | WS_CHILD|BS_DEFPUSHBUTTON,
-       100, 0, 100, 80, hWnd, (HMENU)100, hInstance, nullptr);
-   ctrls.insert(std::make_pair(100, button));
+   //HWND button = CreateWindowW(L"Button", L"Enter", WS_VISIBLE|WS_CHILD,       
+   //    300, 300, 100, 80, hWnd, nullptr, hInstance, nullptr);
+   //HWND text = CreateWindowW(L"Edit", L"SELECTIONNER UNE ENTRER", WS_VISIBLE | WS_CHILD|BS_DEFPUSHBUTTON,   //creation button visible pour showwindow et updatewindow et child pour dire que c'est l'enfant de la fenetre
+   //    100, 0, 100, 80, hWnd, (HMENU)100, hInstance, nullptr);
+   //ctrls.insert(std::make_pair(100, button));
    //HWND hwndButton = CreateWindow(
    //    L"BUTTON",  // Predefined class; Unicode assumed 
    //    L"OK",      // Button text 
@@ -123,7 +124,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
        button_state = SendMessage(button_handle,
            BM_GETSTATE,
            0, 0);*/
-   if (!button)return FALSE;
+   //if (!button)return FALSE;
 
    if (!hWnd)
    {
@@ -145,8 +146,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_COMMAND  - traite le menu de l'application
 //  WM_PAINT    - Dessine la fenêtre principale
 //  WM_DESTROY  - génère un message d'arrêt et retourne
-//
-//
+int main() 
+{
+    
+}
+   
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -170,9 +174,37 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_PAINT:
         {
+            //tagBITMAPINFO();
+            FILE* test;
+            errno_t error = fopen_s(&test, "C:\\Users\\ggalas\\Documents\\GitHub\\Exo-SECCIA\\wolf 1.bmp", "rb");;
+            BYTE* buf = new BYTE[5000000];	// (source)	//lecture du file -> buffer 
+            BYTE* src = buf;
+            size_t size = fread(buf, 1, 50000000, test);		//idem
+            fclose(test);
+            BITMAPFILEHEADER head = {};	//destination
+            BITMAPINFOHEADER bih = {};
+            memcpy(&head, buf, sizeof(BITMAPFILEHEADER));
+            memcpy(&bih, buf + sizeof(BITMAPFILEHEADER), sizeof(BITMAPINFOHEADER));
+            src = buf + head.bfOffBits;
+            BITMAPINFO bi = {};
+            bi.bmiHeader = bih;
+            
             PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Ajoutez ici le code de dessin qui utilise hdc...
+            HDC hdc = BeginPaint(hWnd, &ps); 
+           //for (int i = 0; i < 250; i++)
+           //{
+           //    for (int k = 0; k < 250; k++)
+           //    {
+           //        SetPixel(hdc, i, k, RGB(i, k, i));
+           //    }
+           //}
+            HBITMAP bm=CreateDIBitmap(hdc, &bih, CBM_INIT, src, &bi, DIB_RGB_COLORS);
+            //BitBlt(hdc, 200, 100, 1536, 2002, );
+            Rectangle(hdc, 550, 1000, 50, 100); //(x,y,x,y)
+            Rectangle(hdc, 350, 100, 550, 300);
+            DeleteObject(bm);
+            LineTo(hdc,100,500);
+            //CreateDIBitmap(hdc,bih,)
             EndPaint(hWnd, &ps);
         }
         break;
