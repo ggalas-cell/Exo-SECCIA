@@ -189,6 +189,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             
             memcpy(&head, buf, sizeof(BITMAPFILEHEADER));
             memcpy(&bih, buf + sizeof(BITMAPFILEHEADER), sizeof(BITMAPINFOHEADER));
+
+            int bitwidth = bih.biWidth;
+            int bitheight = bih.biHeight;
             
             BYTE* src = buf + head.bfOffBits;
             BITMAPINFO bi = {};
@@ -207,13 +210,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
            //}
             
             //SetPixel(hdc,50,50)  WM_TIMER
-            BitBlt(hdc, 50, 50, bih.biWidth,bih.biHeight,hdcmem,0,0,SRCCOPY);
             //Rectangle(hdc, 550, 1000, 50, 100); //(x,y,x,y)
             //Rectangle(hdc, 350, 100, 550, 300);
+            //LineTo(hdc,100,500);
+            BitBlt(hdc, 50, 50, bih.biWidth,bih.biHeight,hdcmem,0,0,SRCCOPY);
             DeleteDC(hdcmem);
             DeleteObject(bm);
-            //LineTo(hdc,100,500);
-            //CreateDIBitmap(hdc,bih,)
             delete[] buf;
             EndPaint(hWnd, &ps);
         }
