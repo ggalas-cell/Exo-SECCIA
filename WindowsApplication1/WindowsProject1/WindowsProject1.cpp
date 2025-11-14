@@ -176,24 +176,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
         {
             //tagBITMAPINFO();
-            FILE* test;
-            errno_t error = fopen_s(&test, "C:\\Users\\ggalas\\Documents\\GitHub\\Exo-SECCIA\\wolf 1.bmp", "rb");;
-            BYTE* buf = new BYTE[5000000];	// (source)	//lecture du file -> buffer 
-            BYTE* src = buf;
-            size_t size = fread(buf, 1, 50000000, test);		//idem
-            fclose(test);
+            FILE* file;
+            errno_t error = fopen_s(&file, "C:\\Users\\ggalas\\Documents\\GitHub\\Exo-SECCIA\\wolf 1.bmp", "rb");;
+            if (!file)break;
+            
+            BYTE* buf = new BYTE[50000000];	// (source)	//lecture du file -> buffer 
+            size_t size = fread(buf, 1, 50000000, file);		//idem
+            fclose(file);
+            
             BITMAPFILEHEADER head = {};	//destination
             BITMAPINFOHEADER bih = {};
+            
             memcpy(&head, buf, sizeof(BITMAPFILEHEADER));
             memcpy(&bih, buf + sizeof(BITMAPFILEHEADER), sizeof(BITMAPINFOHEADER));
-            src = buf + head.bfOffBits;
+            
+            BYTE* src = buf + head.bfOffBits;
             BITMAPINFO bi = {};
             bi.bmiHeader = bih;
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps); 
             HDC hdcmem = CreateCompatibleDC(hdc);
             HBITMAP bm = CreateDIBitmap(hdc, &bih, CBM_INIT, src, &bi, DIB_RGB_COLORS);
-            HBITMAP img = LoadBitmap(hInst,SelectObject(hdc,bm))
+            SelectObject(hdcmem, bm);
            //for (int i = 0; i < 250; i++)
            //{
            //    for (int k = 0; k < 250; k++)
@@ -203,12 +207,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
            //}
             
            
-            //BitBlt(hdc, 200, 100, 1536, 2002, bm, );
-            Rectangle(hdc, 550, 1000, 50, 100); //(x,y,x,y)
-            Rectangle(hdc, 350, 100, 550, 300);
+            BitBlt(hdc, 50, 50, bih.biWidth,bih.biHeight,hdcmem,0,0,SRCCOPY);
+            //Rectangle(hdc, 550, 1000, 50, 100); //(x,y,x,y)
+            //Rectangle(hdc, 350, 100, 550, 300);
+            DeleteDC(hdcmem);
             DeleteObject(bm);
-            LineTo(hdc,100,500);
+            //LineTo(hdc,100,500);
             //CreateDIBitmap(hdc,bih,)
+            delete[] buf;
             EndPaint(hWnd, &ps);
         }
         break;
