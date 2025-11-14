@@ -1,0 +1,7 @@
+état de la grille: 3 possibilité/case 18 bit
+joueur en cours: 1 bit
+état de game: 2 bit
+nb de parties gagnées par j1 (5 max) : 3 bit
+nb de parties gagnées par j2 (5 max) : 3 bit
+nb de parties nulles (20 max) : 5 bit
+gameinfo 0b10101001001000011000111001011011
