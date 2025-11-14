@@ -36,6 +36,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // Effectue l'initialisation de l'application :
     if (!InitInstance (hInstance, nCmdShow))
     {
+        hInst = hInstance;
         return FALSE;
     }
 
@@ -74,7 +75,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
     wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_WINDOWSPROJECT1);
-    wcex.lpszClassName  = L"yes";                                   //nom de clsse<
+    wcex.lpszClassName  = L"yes";                                   //nom de clsse
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
     return RegisterClassExW(&wcex);
@@ -188,9 +189,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             src = buf + head.bfOffBits;
             BITMAPINFO bi = {};
             bi.bmiHeader = bih;
-            
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps); 
+            HDC hdcmem = CreateCompatibleDC(hdc);
+            HBITMAP bm = CreateDIBitmap(hdc, &bih, CBM_INIT, src, &bi, DIB_RGB_COLORS);
+            HBITMAP img = LoadBitmap(hInst,SelectObject(hdc,bm))
            //for (int i = 0; i < 250; i++)
            //{
            //    for (int k = 0; k < 250; k++)
@@ -198,8 +201,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
            //        SetPixel(hdc, i, k, RGB(i, k, i));
            //    }
            //}
-            HBITMAP bm=CreateDIBitmap(hdc, &bih, CBM_INIT, src, &bi, DIB_RGB_COLORS);
-            //BitBlt(hdc, 200, 100, 1536, 2002, );
+            
+           
+            //BitBlt(hdc, 200, 100, 1536, 2002, bm, );
             Rectangle(hdc, 550, 1000, 50, 100); //(x,y,x,y)
             Rectangle(hdc, 350, 100, 550, 300);
             DeleteObject(bm);
