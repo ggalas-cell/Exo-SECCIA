@@ -147,10 +147,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_COMMAND  - traite le menu de l'application
 //  WM_PAINT    - Dessine la fenêtre principale
 //  WM_DESTROY  - génère un message d'arrêt et retourne
-int main() 
-{
-    
-}
+
    
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -190,6 +187,41 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             memcpy(&head, buf, sizeof(BITMAPFILEHEADER));
             memcpy(&bih, buf + sizeof(BITMAPFILEHEADER), sizeof(BITMAPINFOHEADER));
 
+            fread(&head, sizeof(head), 1, file);
+            fread(&bih, sizeof(bih), 1, file);
+            
+
+            if (head.bfType != 0x4D42)
+            {
+                std::cout << "Ce n'est pas un fichier BMP.\n";
+                return -1;
+            }
+            fseek(file, head.bfOffBits, SEEK_SET);
+            unsigned char* pixels = (unsigned char*)malloc(bih.biSizeImage);
+            fclose(file);
+            for (int i = 0; i < bih.biSizeImage; i += 3) 
+            {
+                unsigned char b = pixels[i];
+                unsigned char g = pixels[i + 1];
+                unsigned char r = pixels[i + 2];
+
+                pixels[i] = 255 - b;
+                pixels[i + 1] = 255 - g;
+                pixels[i + 2] = 255 - r;
+            }
+            FILE* f2 = fopen("output.bmp", "wb");
+
+            // Écriture des en-têtes
+            fwrite(&head, sizeof(head), 1, f2);
+            fwrite(&bih, sizeof(bih), 1, f2);
+
+            // Écriture des pixels
+            fwrite(pixels, 1, bih.biSizeImage, f2);
+
+            fclose(f2);
+            free(pixels);
+
+
             int bitwidth = bih.biWidth;
             int bitheight = bih.biHeight;
             
@@ -197,10 +229,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             BITMAPINFO bi = {};
             bi.bmiHeader = bih;
             PAINTSTRUCT ps;
+            HWND hd ;
             HDC hdc = BeginPaint(hWnd, &ps); 
             HDC hdcmem = CreateCompatibleDC(hdc);
             HBITMAP bm = CreateDIBitmap(hdc, &bih, CBM_INIT, src, &bi, DIB_RGB_COLORS);
-            SelectObject(hdcmem, bm);
+            SelectObject(hdcmem, bm); //mettre dans hdcmem
+            //SetScrollRange(,)         a faire 
            //for (int i = 0; i < 250; i++)
            //{
            //    for (int k = 0; k < 250; k++)
@@ -213,7 +247,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             //Rectangle(hdc, 550, 1000, 50, 100); //(x,y,x,y)
             //Rectangle(hdc, 350, 100, 550, 300);
             //LineTo(hdc,100,500);
-            BitBlt(hdc, 50, 50, bih.biWidth,bih.biHeight,hdcmem,0,0,SRCCOPY);
+            BitBlt(hdc, 50, 50, bih.biWidth,bih.biHeight,hdcmem,0,0,SRCCOPY);       //afficher img avec coordonner haut gauche bas droit
+            int SetScrollInfo();    
             DeleteDC(hdcmem);
             DeleteObject(bm);
             delete[] buf;

@@ -9,8 +9,8 @@ int main()			// PARAMETRE D
 	if (error != 0)return 0;
 	
 	//std::cout << fopen;
-	BYTE* buf = new BYTE[5000000];	// (source)	//lecture du file -> buffer 
-	size_t size = fread(buf, 1, 5000000, test);		//idem
+	BYTE* buf = new BYTE[50000000];	// (source)	//lecture du file -> buffer 
+	size_t size = fread(buf, 1, 50000000, test);		//idem
 	fclose(test);
 	BITMAPFILEHEADER head = {};	//destination
 	BITMAPINFOHEADER bih = {};
