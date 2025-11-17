@@ -196,12 +196,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 std::cout << "Ce n'est pas un fichier BMP.\n";
                 return -1;
             }
-            fseek(file, head.bfOffBits, SEEK_SET);
+            fseek(file, head.bfOffBits, SEEK_SET);  
             unsigned char* pixels = (unsigned char*)malloc(bih.biSizeImage);
             fclose(file);
             for (int i = 0; i < bih.biSizeImage; i += 3) 
             {
-                unsigned char b = pixels[i];
+                unsigned char b = pixels[i];                    //modif pixels
                 unsigned char g = pixels[i + 1];
                 unsigned char r = pixels[i + 2];
 
